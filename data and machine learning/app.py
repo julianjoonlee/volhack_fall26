@@ -1,3 +1,4 @@
+# MOVIE_NIGHT_INTERACTIVE_LAYOUT_V1
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from io import BytesIO
@@ -34,6 +35,8 @@ import zipfile
 import pandas as pd
 import streamlit as st
 import group_rooms
+import boxd_group_ui
+import cinematic_ui
 
 
 APP_DIR = Path(__file__).resolve().parent
@@ -168,7 +171,116 @@ def show_comparison(actual_bytes, baseline, label):
             st.caption('CSV bytes differ, but parsed values match within the stated tolerance.')
 
 
-st.set_page_config(page_title='Movie Night', page_icon='🎬', layout='wide')
+st.set_page_config(page_title='Boxd Togther', page_icon='🎬', layout='wide', initial_sidebar_state='collapsed')
+# MOVIE_NIGHT_CINEMATIC_V2
+cinematic_ui.theme()
+cinematic_ui.interactive_theme()
+cinematic_ui.boxd_wide_results_theme()
+#BOXD_TOGTHER_WIDE_RESULTS_V1
+
+# MOVIE_NIGHT_CINEMATIC_UI_V1 — presentation only, no backend changes
+st.markdown("""
+<style>
+/* Design tokens */
+:root {
+  --mn-bg: #080d13;
+  --mn-panel: #121c26;
+  --mn-panel-2: #182631;
+  --mn-text: #f4f7fa;
+  --mn-muted: #a8b8c6;
+  --mn-green: #21cf79;
+  --mn-border: rgba(172, 201, 217, .17);
+}
+html { scroll-behavior: smooth; }
+.stApp {
+  background: radial-gradient(ellipse 85% 35% at 52% -6%, rgba(19, 108, 78, .29), transparent 78%),
+              linear-gradient(180deg, #0b141d 0%, var(--mn-bg) 58%);
+  color: var(--mn-text);
+}
+[data-testid="stAppViewContainer"] { background: transparent; }
+[data-testid="stHeader"] { background: transparent; }
+[data-testid="stSidebar"] {
+  background: #0d1721;
+  border-right: 1px solid var(--mn-border);
+}
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p { color: var(--mn-muted); }
+.block-container { max-width: 1260px; padding-top: 2.3rem; padding-bottom: 5rem; }
+/* Typographic hierarchy */
+h1, h2, h3, h4 { color: var(--mn-text); letter-spacing: -.035em; }
+h1 { font-size: clamp(2.15rem, 5vw, 4.1rem) !important; line-height: 1.09 !important; font-weight: 800 !important; }
+h2 { font-size: clamp(1.45rem, 2.8vw, 2rem) !important; font-weight: 750 !important; }
+h3 { font-weight: 720 !important; }
+[data-testid="stCaptionContainer"], .stCaption { color: var(--mn-muted) !important; }
+/* Brand / hero */
+.mn-brandbar { display: flex; align-items: center; gap: .65rem; margin: .35rem 0 1.5rem; }
+.mn-brandicon { width: 39px; height: 39px; border-radius: 12px; display: grid; place-items: center;
+  color: #07160f; font-weight: 900; background: linear-gradient(145deg, #6cf3aa, #13b96d);
+  box-shadow: 0 5px 24px rgba(32, 211, 121, .22); font-size: 1.25rem; }
+.mn-brandname { font-size: 1.05rem; font-weight: 850; letter-spacing: .09em; color: #f8fbff; }
+.mn-brandpill { margin-left: auto; padding: .35rem .8rem; border: 1px solid rgba(48, 217, 128, .34);
+  background: rgba(33, 207, 121, .08); border-radius: 100px; color: #8df1ba; font-size: .73rem;
+  font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+.mn-hero-eyebrow { color: #8bf0b6; font-size: .76rem; font-weight: 800; letter-spacing: .18em;
+  text-transform: uppercase; margin-bottom: -.25rem; }
+.mn-hero-rule { height: 1px; background: linear-gradient(90deg, rgba(33, 207, 121, .7), rgba(33, 207, 121, 0));
+  margin: 1.3rem 0 1.9rem; }
+/* Buttons, fields, and uploader */
+.stButton > button, .stDownloadButton > button, .stFormSubmitButton > button {
+  border-radius: 12px !important; min-height: 2.9rem; font-weight: 700;
+  border: 1px solid rgba(172, 201, 217, .22); transition: background .16s, border-color .16s, transform .16s;
+}
+.stButton > button:hover, .stDownloadButton > button:hover { transform: translateY(-1px); border-color: #53e49c; }
+.stButton > button[kind="primary"], .stFormSubmitButton > button[kind="primary"] {
+  background: linear-gradient(120deg, #20d47d, #0db66a) !important;
+  color: #07150e !important; border: 1px solid #20d47d !important;
+  box-shadow: 0 5px 22px rgba(20, 192, 111, .18);
+}
+.stButton > button[kind="primary"]:disabled { opacity: .48; box-shadow: none; }
+[data-testid="stFileUploader"] { background: rgba(20, 34, 46, .65); border-radius: 15px; padding: .35rem; }
+[data-testid="stFileUploaderDropzone"] { border: 1px dashed rgba(69, 207, 139, .48); border-radius: 12px; }
+[data-baseweb="input"] > div, [data-baseweb="select"] > div {
+  background-color: #13212d !important; border-color: rgba(172, 201, 217, .23) !important;
+  border-radius: 10px !important;
+}
+/* Tabs, dividers, and output panels */
+[data-baseweb="tab-list"] { gap: .35rem; border-bottom: 1px solid var(--mn-border); flex-wrap: wrap; }
+button[data-baseweb="tab"] { color: #b7c8d4; font-weight: 650; border-radius: 9px 9px 0 0; }
+button[data-baseweb="tab"][aria-selected="true"] { color: #8af3b6; }
+hr { border-color: var(--mn-border) !important; }
+[data-testid="stMetric"] { padding: 1.1rem 1.2rem; border-radius: 15px;
+  background: linear-gradient(145deg, #172631, #111c26); border: 1px solid var(--mn-border); }
+[data-testid="stVerticalBlockBorderWrapper"] > div[data-testid="stVerticalBlock"] {
+  border-radius: 15px;
+}
+/* Streamlit bordered containers — leave poster HTML dimensions untouched */
+[data-testid="stVerticalBlockBorderWrapper"] { border-radius: 15px !important; }
+[data-testid="stAlert"] { border-radius: 12px; }
+[data-testid="stDataFrame"] { border-radius: 12px; overflow: hidden; }
+/* Accessibility */
+button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible {
+  outline: 2px solid #70efad !important; outline-offset: 3px;
+}
+@media (max-width: 700px) {
+  .block-container { padding-top: 1.25rem; padding-left: 1rem; padding-right: 1rem; }
+  .mn-brandpill { display: none; }
+  .mn-brandbar { margin-bottom: 1.1rem; }
+  h1 { font-size: 2.15rem !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="mn-brandbar">
+  <div class="mn-brandicon" aria-hidden="true">▶</div>
+  <div class="mn-brandname">BOXD TOGTHER</div>
+  <div class="mn-brandpill">Better together</div>
+</div>
+<div class="mn-hero-eyebrow">Find the perfect group pick</div>
+""", unsafe_allow_html=True)
+
 st.markdown('''<style>
 .stApp { background: #10171e; color: #edf3f8; }
 [data-testid="stSidebar"] { background: #18232d; }
@@ -177,9 +289,7 @@ h1, h2, h3 { letter-spacing: -0.03em; }
 div.stButton > button[kind="primary"] { background: #00a842; border: 0; color: white; }
 [data-testid="stMetric"] { padding: 1rem; background: #1b2834; border-radius: 12px; }
 </style>''', unsafe_allow_html=True)
-st.caption('MOVIE NIGHT / GROUP RECOMMENDATIONS')
-st.title('Different tastes. One movie night.')
-st.write('Upload Letterboxd ratings, run your existing Python workflow, and find the group’s next watch.')
+cinematic_ui.interactive_hero()
 
 with st.sidebar:
     st.header('Backend setup')
@@ -200,7 +310,7 @@ with st.sidebar:
     st.caption('The original matching, training, random seeds and ranking stay in your two backend scripts.')
 
 # AUTO_HOST_BOOKMARK_V1
-st.subheader('1 · Your movie night group')
+st.subheader('1 · Your Boxd Togther group')
 st.caption('Friends join using the group code and upload their own Letterboxd CSVs.')
 
 # The host link contains a secret, so bookmarking it restores host access after refresh.
@@ -217,7 +327,23 @@ current_key = st.session_state.get('group_host_key', '')
 is_current_host = bool(current_code and current_key and group_rooms.is_host(current_code, current_key))
 
 if not is_current_host:
-    choice = st.radio('Get started', ['Create a group', 'Join a group'], horizontal=True)
+    st.markdown('<div class="mn-landing-actions">Start your Boxd Togther</div>', unsafe_allow_html=True)
+    landing_create, landing_join = st.columns(2, gap='medium')
+    with landing_create:
+        if st.button('＋ Create a group', type='primary', use_container_width=True, key='mn-create'):
+            new_code, new_key = group_rooms.create_room()
+            st.session_state['group_code'] = new_code
+            st.session_state['group_host_key'] = new_key
+            st.query_params['room'] = new_code
+            st.query_params['host'] = new_key
+            st.rerun()
+    with landing_join:
+        if st.button('Join with a code', use_container_width=True, key='mn-join'):
+            st.session_state['mn_show_join'] = True
+    if st.session_state.get('mn_show_join'):
+        choice = 'Join a group'
+    else:
+        choice = 'Create a group'
     if choice == 'Create a group':
         if st.button('Create group', type='primary'):
             new_code, new_key = group_rooms.create_room()
@@ -254,6 +380,7 @@ if not is_current_host:
             except Exception as exc:
                 st.error(str(exc))
     st.write('Members uploaded: ' + (', '.join(group_rooms.members(code)) or 'None yet'))
+    boxd_group_ui.render(code, group_rooms.get_uploads(code))
     st.stop()
 
 code = current_code
@@ -262,54 +389,55 @@ host_key = current_key
 if st.query_params.get('room') != code or st.query_params.get('host') != host_key:
     st.query_params['room'] = code
     st.query_params['host'] = host_key
-st.success(f'You are hosting room {code}')
-st.code(code, language=None)
-st.caption('Share only the code above and the public website address with friends. Bookmark your current URL privately to return as host.')
-st.warning('Do not share your current browser URL: it contains a private host credential.')
-# HOST_UPLOAD_AND_POSTER_FIX_V1
-st.markdown('#### Upload your own ratings (host)')
-st.caption('You can contribute your CSV here without opening the friend/join link.')
-host_name = st.text_input('Your name', key=f'host_name_{code}')
-host_file = st.file_uploader('Your Letterboxd ratings CSV', type=['csv'], key=f'host_csv_{code}')
-if st.button('Submit my CSV as host', disabled=not (host_name.strip() and host_file is not None)):
-    person = re.sub(r'[^a-z0-9]+', '_', host_name.strip().lower()).strip('_')
-    for suffix in ('_rating', '_pred'):
-        if person.endswith(suffix):
-            person = person[:-len(suffix)]
-    if not person:
-        st.error('Enter a name containing letters or numbers.')
-    else:
-        try:
-            csv_bytes = host_file.getvalue()
-            if not csv_bytes:
-                raise ValueError('The CSV is empty.')
-            header = pd.read_csv(BytesIO(csv_bytes), nrows=0)
-            missing = {'Name', 'Year', 'Rating'} - set(header.columns)
-            if missing:
-                raise ValueError('Missing CSV columns: ' + ', '.join(sorted(missing)))
-            existing = group_rooms.members(code)
-            if person in existing and st.session_state.get(f'host_uploaded_name_{code}') != person:
-                raise ValueError('This name already has an upload. Choose a unique name.')
-            group_rooms.upload(code, person, csv_bytes)
-            st.session_state[f'host_uploaded_name_{code}'] = person
-            st.success('Your CSV was uploaded to the group!')
-            st.rerun()
-        except Exception as exc:
-            st.error(str(exc))
+with st.container(border=True):
+    st.success(f'You are hosting room {code}')
+    st.code(code, language=None)
+    st.caption('Share only the code above and the public website address with friends. Bookmark your current URL privately to return as host.')
+    st.warning('Do not share your current browser URL: it contains a private host credential.')
+    # HOST_UPLOAD_AND_POSTER_FIX_V1
+    st.markdown('#### Upload your own ratings (host)')
+    st.caption('You can contribute your CSV here without opening the friend/join link.')
+    host_name = st.text_input('Your name', key=f'host_name_{code}')
+    host_file = st.file_uploader('Your Letterboxd ratings CSV', type=['csv'], key=f'host_csv_{code}')
+    if st.button('Submit my CSV as host', disabled=not (host_name.strip() and host_file is not None)):
+        person = re.sub(r'[^a-z0-9]+', '_', host_name.strip().lower()).strip('_')
+        for suffix in ('_rating', '_pred'):
+            if person.endswith(suffix):
+                person = person[:-len(suffix)]
+        if not person:
+            st.error('Enter a name containing letters or numbers.')
+        else:
+            try:
+                csv_bytes = host_file.getvalue()
+                if not csv_bytes:
+                    raise ValueError('The CSV is empty.')
+                header = pd.read_csv(BytesIO(csv_bytes), nrows=0)
+                missing = {'Name', 'Year', 'Rating'} - set(header.columns)
+                if missing:
+                    raise ValueError('Missing CSV columns: ' + ', '.join(sorted(missing)))
+                existing = group_rooms.members(code)
+                if person in existing and st.session_state.get(f'host_uploaded_name_{code}') != person:
+                    raise ValueError('This name already has an upload. Choose a unique name.')
+                group_rooms.upload(code, person, csv_bytes)
+                st.session_state[f'host_uploaded_name_{code}'] = person
+                st.success('Your CSV was uploaded to the group!')
+                st.rerun()
+            except Exception as exc:
+                st.error(str(exc))
 
 if st.button('Refresh uploads'):
     st.rerun()
 shared_uploads = group_rooms.get_uploads(code)
+boxd_group_ui.render(code, shared_uploads, expected=st.session_state.get(f"expected_{code}"))  # BOXD_GROUP_LOBBY_COMPAT_V1
 st.write('Uploaded: ' + (', '.join(shared_uploads) or 'Nobody yet'))
-expected_members = st.number_input('How many people are uploading CSVs (including you)?', min_value=1, max_value=12,
-                                   value=3, step=1, key=f'expected_{code}')
-ready = len(shared_uploads) >= expected_members
-if ready:
-    st.success(f'All {expected_members} CSVs are in. You can generate recommendations below.')
+# FLEXIBLE_GROUP_UPLOADS_V1
+# Any number of members may upload; the host can generate once at least one CSV exists.
+if shared_uploads:
+    st.success(f"{len(shared_uploads)} CSV file(s) uploaded. Ready to generate recommendations.")
 else:
-    st.info(f'Waiting for {expected_members - len(shared_uploads)} more CSV(s).')
+    st.info('Waiting for the first CSV upload.')
 ratings = {person: BytesIO(data) for person, data in shared_uploads.items()}
-people_valid = ready
+people_valid = bool(shared_uploads)
 mode = 'Upload ratings'
 with st.expander('Delete this room and its uploads'):
     confirm = st.checkbox('Permanently delete this room and all its CSVs')
@@ -320,33 +448,34 @@ with st.expander('Delete this room and its uploads'):
         st.query_params.clear()
         st.rerun()
 
-st.subheader('2 · Run the recommendation workflow')
-st.caption('At least one person needs five rated movies with usable matching library features. '
-           'Your backend skips people below that threshold. Runs include its original charts and poster downloads.')
-if st.button('Generate recommendations', type='primary', disabled=not ratings or not people_valid):
-    st.session_state.pop('movie_result', None)
-    try:
-        scripts = resolve_scripts(backend_folder)
-        missing = [name for name, source in libraries.items()
-                   if source is None or (isinstance(source, Path) and not source.is_file())]
-        if missing:
-            raise ValueError('Missing library files: ' + ', '.join(missing))
-        for person, source in ratings.items():
-            reader = source if isinstance(source, Path) else BytesIO(source.getvalue())
-            header = pd.read_csv(reader, nrows=0)
-            missing_columns = {'Name', 'Year', 'Rating'} - set(header.columns)
-            if missing_columns:
-                raise ValueError(f'{person.capitalize()}: missing CSV columns: {", ".join(sorted(missing_columns))}')
-        with st.status('Starting the original backend scripts…', expanded=True) as status:
-            log_box = st.empty()
-            result = execute_pipeline(scripts, libraries, ratings, log_box, status)
-            st.session_state['movie_result'] = result
-            status.update(
-                label='Backend stopped — inspect the log' if result['failure'] else 'Recommendations ready',
-                state='error' if result['failure'] else 'complete', expanded=bool(result['failure']),
-            )
-    except Exception as exc:
-        st.error(str(exc))
+with st.container(border=True):
+    st.subheader('2 · Run the recommendation workflow')
+    st.caption('At least one person needs five rated movies with usable matching library features. '
+               'Your backend skips people below that threshold. Runs include its original charts and poster downloads.')
+    if st.button('Generate recommendations', type='primary', disabled=not ratings or not people_valid):
+        st.session_state.pop('movie_result', None)
+        try:
+            scripts = resolve_scripts(backend_folder)
+            missing = [name for name, source in libraries.items()
+                       if source is None or (isinstance(source, Path) and not source.is_file())]
+            if missing:
+                raise ValueError('Missing library files: ' + ', '.join(missing))
+            for person, source in ratings.items():
+                reader = source if isinstance(source, Path) else BytesIO(source.getvalue())
+                header = pd.read_csv(reader, nrows=0)
+                missing_columns = {'Name', 'Year', 'Rating'} - set(header.columns)
+                if missing_columns:
+                    raise ValueError(f'{person.capitalize()}: missing CSV columns: {", ".join(sorted(missing_columns))}')
+            with st.status('Starting the original backend scripts…', expanded=True) as status:
+                log_box = st.empty()
+                result = execute_pipeline(scripts, libraries, ratings, log_box, status)
+                st.session_state['movie_result'] = result
+                status.update(
+                    label='Backend stopped — inspect the log' if result['failure'] else 'Recommendations ready',
+                    state='error' if result['failure'] else 'complete', expanded=bool(result['failure']),
+                )
+        except Exception as exc:
+            st.error(str(exc))
 
 result = st.session_state.get('movie_result')
 if result:
@@ -378,41 +507,23 @@ if result:
                 st.markdown('### Top 10 recommendations')
                 if len(recs) < 10:
                     st.info(f'The backend returned only {len(recs)} eligible recommendations.')
-                for index, (_, movie) in enumerate(recs.head(10).iterrows()):
-                    if index % 3 == 0:
-                        cards = st.columns(3)
-                    with cards[index % 3]:
-                        with st.container(border=True):
-                            poster = movie.get('poster_link')
-                            # A fixed poster area keeps every recommendation card the same size.
-                            # HOST_UPLOAD_AND_POSTER_FIX_V1_POSTER
-                            if pd.notna(poster) and str(poster).strip().startswith(('https://', 'http://')):
-                                from html import escape as escape_html
-                                safe_poster = escape_html(str(poster).strip(), quote=True)
-                                st.markdown(
-                                    '<div style="height:340px;width:100%;display:flex;'
-                                    'align-items:center;justify-content:center;overflow:hidden;'
-                                    'background:#111923;border-radius:10px;margin-bottom:12px">'
-                                    f'<img src="{safe_poster}" alt="Movie poster" '
-                                    'style="width:100%;height:100%;object-fit:contain;display:block">'
-                                    '</div>',
-                                    unsafe_allow_html=True,
-                                )
-                            else:
-                                st.markdown(
-                                    '<div style="height:340px;display:flex;align-items:center;'
-                                    'justify-content:center;background:#111923;'
-                                    'border-radius:10px;margin-bottom:12px">🎬 Poster unavailable</div>',
-                                    unsafe_allow_html=True,
-                                )
-                            st.markdown(f"#### #{index + 1} · {movie['movie']}")
-                            st.caption(f"{int(movie['year'])} · {movie['genre']}")
-                            st.write(f"Group prediction: **{movie['group_pred_avg']:.2f} ★**")
-                            st.write(f"Lowest prediction: **{movie['least_misery_score']:.2f} ★**")
-                            st.caption(f"Director: {movie['director']}")
-            st.dataframe(recs.head(10), hide_index=True, use_container_width=True)
-            st.download_button('Download top 10 CSV', recs.head(10).to_csv(index=False).encode('utf-8'),
-                               'top_10_recommendations.csv', 'text/csv')
+                # BOXD_RECOMMENDATION_COUNT_V1
+                count_options = [n for n in (5, 10, 15, 20, 25, 50) if n <= len(recs)]
+                if len(recs) not in count_options:
+                    count_options.append(len(recs))
+                count_options = sorted(set(count_options))
+                default_count = 10 if 10 in count_options else len(recs)
+                show_count = st.selectbox(
+                    'How many movie recommendations would you like to see?',
+                    options=count_options,
+                    index=count_options.index(default_count),
+                    format_func=lambda n: f'All {n} movies' if n == len(recs) else f'Top {n} movies',
+                    key='boxd_recommendation_count',
+                )
+                cinematic_ui.movie_grid(recs, show_count)
+            st.dataframe(recs.head(show_count), hide_index=True, use_container_width=True)
+            st.download_button(f'Download top {show_count} CSV', recs.head(show_count).to_csv(index=False).encode('utf-8'),
+                               f'top_{show_count}_recommendations.csv', 'text/csv')
             with st.expander(f'All backend recommendations ({len(recs)})'):
                 st.dataframe(recs, hide_index=True, use_container_width=True)
             st.download_button('Download full recommendations CSV', files['group_recommendations.csv'],
