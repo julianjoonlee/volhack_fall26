@@ -6,10 +6,7 @@ import seaborn as sns
 # 1. Define your input files
 rating_files = {
     'arturo_rating': 'arturo_ratings.csv',
-    'jacob_rating': 'jacob_ratings.csv',
-    'jake_rating': 'jake_ratings.csv',
     'julian_rating': 'julian_ratings.csv',
-    'matthew_rating': 'matthew_ratings.csv',
     'sameer_rating': 'sameer_ratings.csv'
 }
 
