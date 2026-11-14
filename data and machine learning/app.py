@@ -302,6 +302,11 @@ if result:
                         cards = st.columns(3)
                     with cards[index % 3]:
                         with st.container(border=True):
+                            poster = movie.get('poster_link')
+                            if pd.notna(poster) and str(poster).strip().startswith(('https://', 'http://')):
+                                st.image(str(poster).strip(), use_container_width=True)
+                            else:
+                                st.caption('🎬 Poster unavailable')
                             st.markdown(f"#### #{index + 1} · {movie['movie']}")
                             st.caption(f"{int(movie['year'])} · {movie['genre']}")
                             st.write(f"Group prediction: **{movie['group_pred_avg']:.2f} ★**")
