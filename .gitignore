@@ -1,8 +1,5 @@
-actors.csv
-crew.csv
-movies.csv
-posters.csv
-data/actors.csv
-data/crew.csv
-data/movies.csv
-data/posters.csv
+**/movies.csv
+**/posters.csv
+**/genres.csv
+**/actors.csv
+**/crew.csv
