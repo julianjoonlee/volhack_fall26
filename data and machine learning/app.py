@@ -171,7 +171,7 @@ def show_comparison(actual_bytes, baseline, label):
             st.caption('CSV bytes differ, but parsed values match within the stated tolerance.')
 
 
-st.set_page_config(page_title='Boxd Togther', page_icon='🎬', layout='wide', initial_sidebar_state='collapsed')
+st.set_page_config(page_title='Boxd Together', page_icon='🎬', layout='wide', initial_sidebar_state='collapsed')
 # MOVIE_NIGHT_CINEMATIC_V2
 cinematic_ui.theme()
 cinematic_ui.interactive_theme()
@@ -275,7 +275,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 st.markdown("""
 <div class="mn-brandbar">
   <div class="mn-brandicon" aria-hidden="true">▶</div>
-  <div class="mn-brandname">BOXD TOGTHER</div>
+  <div class="mn-brandname">Boxd Together</div>
   <div class="mn-brandpill">Better together</div>
 </div>
 <div class="mn-hero-eyebrow">Find the perfect group pick</div>
@@ -310,7 +310,7 @@ with st.sidebar:
     st.caption('The original matching, training, random seeds and ranking stay in your two backend scripts.')
 
 # AUTO_HOST_BOOKMARK_V1
-st.subheader('1 · Your Boxd Togther group')
+st.subheader('1 · Your Boxd Together group')
 st.caption('Friends join using the group code and upload their own Letterboxd CSVs.')
 
 # The host link contains a secret, so bookmarking it restores host access after refresh.
@@ -327,7 +327,7 @@ current_key = st.session_state.get('group_host_key', '')
 is_current_host = bool(current_code and current_key and group_rooms.is_host(current_code, current_key))
 
 if not is_current_host:
-    st.markdown('<div class="mn-landing-actions">Start your Boxd Togther</div>', unsafe_allow_html=True)
+    st.markdown('<div class="mn-landing-actions">Start your Boxd Together</div>', unsafe_allow_html=True)
     landing_create, landing_join = st.columns(2, gap='medium')
     with landing_create:
         if st.button('＋ Create a group', type='primary', use_container_width=True, key='mn-create'):
@@ -344,16 +344,14 @@ if not is_current_host:
         choice = 'Join a group'
     else:
         choice = 'Create a group'
+    
     if choice == 'Create a group':
-        if st.button('Create group', type='primary'):
-            new_code, new_key = group_rooms.create_room()
-            st.session_state['group_code'] = new_code
-            st.session_state['group_host_key'] = new_key
-            st.query_params['room'] = new_code
-            st.query_params['host'] = new_key
-            st.rerun()
-        st.info('Create a room to get a shareable code. Your browser will open the host view automatically.')
+        st.info(
+            'Create a room to get a shareable code. '
+            'Your browser will open the host view automatically.'
+        )
         st.stop()
+
     code = st.text_input('Group code', value=url_code or current_code, placeholder='ABC123').strip().upper()
     if not code or not group_rooms.exists(code):
         st.info('Enter a valid group code to join.')
@@ -521,13 +519,7 @@ if result:
                     key='boxd_recommendation_count',
                 )
                 cinematic_ui.movie_grid(recs, show_count)
-            st.dataframe(recs.head(show_count), hide_index=True, use_container_width=True)
-            st.download_button(f'Download top {show_count} CSV', recs.head(show_count).to_csv(index=False).encode('utf-8'),
-                               f'top_{show_count}_recommendations.csv', 'text/csv')
-            with st.expander(f'All backend recommendations ({len(recs)})'):
-                st.dataframe(recs, hide_index=True, use_container_width=True)
-            st.download_button('Download full recommendations CSV', files['group_recommendations.csv'],
-                               'group_recommendations.csv', 'text/csv')
+                
     with group_tab:
         if 'group_dataset.csv' in files:
             group = pd.read_csv(BytesIO(files['group_dataset.csv']))

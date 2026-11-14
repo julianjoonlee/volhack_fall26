@@ -1,4 +1,4 @@
-"""Boxd Togther visual components; no group or ML logic lives here."""
+"""Boxd Together visual components; no group or ML logic lives here."""
 from html import escape
 from urllib.parse import urlsplit
 import math
@@ -71,7 +71,7 @@ def theme():
 
 
 def hero():
-    st.markdown('''<div class="mn-nav"><div class="mn-brand">BOXD TOGTHER</div><div class="mn-navlinks">HOME &nbsp; / &nbsp; YOUR GROUP &nbsp; / &nbsp; RECOMMENDATIONS</div></div>
+    st.markdown('''<div class="mn-nav"><div class="mn-brand">Boxd Together</div><div class="mn-navlinks">HOME &nbsp; / &nbsp; YOUR GROUP &nbsp; / &nbsp; RECOMMENDATIONS</div></div>
     <section class="mn-hero"><div class="mn-kicker">The ultimate group movie experience</div>
     <h1>One group.<br>One perfect movie.</h1>
     <p>Bring your friends together, combine your movie tastes, and discover what everyone will love.</p>
@@ -135,12 +135,68 @@ def interactive_theme():
     </style>""", unsafe_allow_html=True)
 
 
+
 def interactive_hero():
-    """An actual welcome screen. Actions are Streamlit controls in app.py."""
-    st.markdown("""<div class="mn-nav"><div class="mn-brand">BOXD TOGTHER</div><div class="mn-navlinks">DISCOVER &nbsp; / &nbsp; WATCH TOGETHER</div></div>
-    <section class="mn-hero"><div class="mn-kicker">YOUR NEXT BOXD TOGTHER STARTS HERE</div>
-    <h1>One group.<br>One perfect movie.</h1>
-    <p>Bring your friends together. Everyone uploads their ratings. Boxd Togther finds the films your group will love.</p></section>""", unsafe_allow_html=True)
+    st.markdown("""
+    <style>
+    .mn-nav {
+        padding: 20px 0 0 !important;
+        margin: 0 !important;
+    }
+
+    .mn-navlinks,
+    .mn-kicker {
+        display: none !important;
+    }
+
+    .mn-nav .mn-brand {
+        color: #e50914 !important;
+        font-size: clamp(54px, 6vw, 90px) !important;
+        font-weight: 900 !important;
+        text-transform: uppercase !important;
+        letter-spacing: -0.05em !important;
+        line-height: 1.05 !important;
+    }
+
+    .mn-hero {
+        min-height: 0 !important;
+        padding: 50px 0 28px 72px !important;
+        margin: 0 !important;
+    }
+
+    .mn-hero h1 {
+        font-size: clamp(42px, 5vw, 74px) !important;
+        font-weight: 900 !important;
+        line-height: 1.05 !important;
+        color: white !important;
+    }
+
+    .mn-hero p {
+        font-size: 18px !important;
+        color: #d1d5db !important;
+        max-width: 620px !important;
+        line-height: 1.7 !important;
+    }
+
+    @media (max-width: 700px) {
+        .mn-hero {
+            padding: 35px 0 25px 12px !important;
+        }
+    }
+    </style>
+
+    <div class="mn-nav">
+        <div class="mn-brand">BOXD TOGETHER</div>
+    </div>
+
+    <section class="mn-hero">
+        <h1>One group.<br>One perfect movie.</h1>
+        <p>
+            Bring your friends together. Everyone uploads their ratings.
+            Boxd Together finds the films your group will love.
+        </p>
+    </section>
+    """, unsafe_allow_html=True)
 
 
 
