@@ -272,15 +272,6 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<div class="mn-brandbar">
-  <div class="mn-brandicon" aria-hidden="true">▶</div>
-  <div class="mn-brandname">Boxd Together</div>
-  <div class="mn-brandpill">Better together</div>
-</div>
-<div class="mn-hero-eyebrow">Find the perfect group pick</div>
-""", unsafe_allow_html=True)
-
 st.markdown('''<style>
 .stApp { background: #10171e; color: #edf3f8; }
 [data-testid="stSidebar"] { background: #18232d; }
