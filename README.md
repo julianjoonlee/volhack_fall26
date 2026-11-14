@@ -4,7 +4,7 @@ Boxd Together is a group movie recommendation web app built for VolHack Fall 202
 
 Picking a movie with friends usually takes longer than watching the movie itself, especially when everyone has different tastes. While Letterboxd is great for tracking what individuals like, there is no built-in way to combine multiple profiles to find something a whole group will enjoy. Boxd Together solves this by taking exported Letterboxd rating CSVs from everyone in a room, training a Random Forest model on each person's rating history, and predicting how the group will react to movies none of them have seen yet.
 
-For the full case study on the group with Arturo, Jacob, Jake, Julian, Matthew, and Sameer, methodology, and project background, refer to [background and theory on project](Volhack.pdf).
+For the full case study on the group with Arturo, Jacob, Jake, Julian, Matthew, and Sameer, methodology, and project background, refer to [background and theory on project](Volhack.pdf). We use an LLM (Gemini Argon) to formalize mathematical definitions, structure proofs, and organize notes in that document.
 
 ## Required Datasets
 
