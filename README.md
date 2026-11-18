@@ -16,6 +16,13 @@ The following core Letterboxd library datasets are excluded from this repository
 - [`actors.csv`](https://www.kaggle.com/datasets/gsimonx37/letterboxd?select=actors.csv)
 - [`crew.csv`](https://www.kaggle.com/datasets/gsimonx37/letterboxd?select=crew.csv)
 
+Export your movie data directly from Letterboxd:
+1. Sign in to your account on Letterboxd via browser.
+2. Click on your username and select Settings.
+3. Go to the Import & Export tab (or open Letterboxd Settings Data).
+4. Click Export Your Data.
+5. Download and unzip the generated folder containing your CSV files
+
 ## How It Works
 
 ### 1. Data Processing (`pandas_group_data.py`)
